@@ -1,359 +1,239 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Phantom Dispatch</title>
+<title>Phantom Dispatch — Kisumu</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <style>
 :root {
+  --bg: #EAEDF0;
   --white: #ffffff;
-  --off: #f4f4f2;
-  --light: #e8e8e4;
-  --mid: #c0bfba;
-  --dark: #1a1a18;
-  --accent: #1a1a18;
-  --text-muted: #9a9990;
+  --dark: #111110;
+  --mid: #9a9890;
+  --border: rgba(0,0,0,0.07);
   --wa: #00a86b;
-  --call: #1a1a18;
   --airtel: #d0021b;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--dark); overflow-x: hidden; }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--white);
-  color: var(--dark);
-  overflow-x: hidden;
-}
+/* CANVAS */
+#cinema { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
 
 /* NAV */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  padding: 1.2rem 2rem;
+  padding: 1.3rem 2rem;
   display: flex; align-items: center; justify-content: space-between;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  background: rgba(234,237,240,0.82);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
 }
-.nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800; font-size: 16px;
-  letter-spacing: -0.3px;
-  color: var(--dark);
-}
-.nav-logo span { color: var(--text-muted); font-weight: 400; }
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: -0.3px; }
+.nav-logo span { color: var(--mid); font-weight: 400; }
 .nav-cta {
-  font-size: 12px; font-weight: 500;
-  padding: 8px 18px;
-  border: 1.5px solid var(--dark);
-  border-radius: 999px;
-  color: var(--dark);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  letter-spacing: 0.3px;
+  font-size: 12px; font-weight: 500; padding: 8px 20px;
+  border: 1.5px solid var(--dark); border-radius: 999px;
+  color: var(--dark); text-decoration: none; transition: all 0.25s;
 }
 .nav-cta:hover { background: var(--dark); color: #fff; }
 
 /* HERO */
 .hero {
-  min-height: 100vh;
-  padding: 8rem 2rem 4rem;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  background: var(--white);
-  position: relative;
-  overflow: hidden;
+  min-height: 100vh; padding: 8rem 2rem 5rem;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  position: relative; z-index: 2; overflow: hidden;
 }
-
-/* soft radial bg */
-.hero::before {
-  content: '';
-  position: absolute; top: -10%; left: 50%;
-  transform: translateX(-50%);
-  width: 800px; height: 800px; border-radius: 50%;
-  background: radial-gradient(circle, #f0efeb 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-eyebrow {
+.eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 500; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--text-muted);
-  margin-bottom: 2rem;
-  animation: fadeUp 0.8s ease both;
+  font-size: 11px; font-weight: 500; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--mid); margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.8s 0.1s ease forwards;
 }
-.eyebrow-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: #00a86b;
-  animation: blink 2s ease-in-out infinite;
-}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wa); animation: blink 2s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
 
-.ghost-3d {
+.ghost-wrap { margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards; }
+.ghost-emoji {
   font-size: 96px;
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.08)) drop-shadow(0 4px 12px rgba(0,0,0,0.06));
-  animation: float3d 4s ease-in-out infinite, fadeUp 0.8s 0.1s ease both;
-  animation-fill-mode: both;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.10));
+  animation: float 5s ease-in-out infinite; display: inline-block;
 }
-@keyframes float3d {
-  0%,100% { transform: translateY(0) rotate(-1deg) scale(1); }
-  50%      { transform: translateY(-20px) rotate(1deg) scale(1.02); }
-}
+@keyframes float { 0%,100%{transform:translateY(0) rotate(-1.5deg);} 50%{transform:translateY(-18px) rotate(1.5deg);} }
 
 .hero-title {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(44px, 12vw, 88px);
-  font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 0.95;
-  color: var(--dark);
-  margin-bottom: 1.5rem;
-  animation: fadeUp 0.8s 0.2s ease both;
+  font-size: clamp(52px, 17vw, 130px);
+  font-weight: 800; letter-spacing: -4px; line-height: 0.92;
+  color: var(--dark); margin-bottom: 1rem;
+  opacity: 0; animation: fadeUp 0.8s 0.3s ease forwards;
 }
-.hero-title .light { color: var(--mid); font-weight: 400; }
+.hero-title .outline { -webkit-text-stroke: 2px var(--dark); color: transparent; }
 
-.hero-desc {
-  font-size: clamp(15px, 3vw, 18px);
-  font-weight: 300;
-  color: var(--text-muted);
-  max-width: 340px;
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
-  animation: fadeUp 0.8s 0.3s ease both;
-  font-style: italic;
+.hero-slogan {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(14px, 3.5vw, 20px);
+  font-weight: 600; letter-spacing: -0.3px;
+  color: var(--dark); margin-bottom: 0.5rem;
+  opacity: 0; animation: fadeUp 0.8s 0.38s ease forwards;
 }
-.hero-desc strong { color: var(--dark); font-style: normal; font-weight: 500; }
+.hero-sub {
+  font-size: 14px; font-weight: 300; font-style: italic;
+  color: var(--mid); margin-bottom: 2.5rem; max-width: 340px; line-height: 1.7;
+  opacity: 0; animation: fadeUp 0.8s 0.45s ease forwards;
+}
+.hero-sub strong { color: var(--dark); font-style: normal; font-weight: 500; }
 
-.hero-actions {
-  display: flex; gap: 12px;
-  animation: fadeUp 0.8s 0.4s ease both;
+.hero-actions { display: flex; gap: 10px; opacity: 0; animation: fadeUp 0.8s 0.55s ease forwards; }
+.btn-dark {
+  padding: 14px 30px; background: var(--dark); color: #fff;
+  border-radius: 999px; font-size: 13px; font-weight: 500;
+  text-decoration: none; transition: all 0.25s;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.14);
 }
-.btn-primary {
-  padding: 14px 28px;
-  background: var(--dark);
-  color: #fff;
-  border-radius: 999px;
-  font-size: 13px; font-weight: 500;
-  text-decoration: none;
-  letter-spacing: 0.3px;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+.btn-dark:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,0.22); }
+.btn-outline {
+  padding: 14px 30px; border: 1.5px solid rgba(0,0,0,0.14);
+  color: var(--dark); border-radius: 999px; font-size: 13px; font-weight: 500;
+  text-decoration: none; background: rgba(255,255,255,0.5); transition: all 0.25s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
-.btn-ghost {
-  padding: 14px 28px;
-  border: 1.5px solid var(--light);
-  color: var(--dark);
-  border-radius: 999px;
-  font-size: 13px; font-weight: 500;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-.btn-ghost:hover { border-color: var(--mid); background: var(--off); }
+.btn-outline:hover { border-color: var(--dark); background: rgba(255,255,255,0.9); }
 
-.hero-scroll {
+.scroll-hint {
   position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
-  animation: fadeUp 1s 0.8s ease both;
+  color: var(--mid); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0; animation: fadeUp 1s 1s ease forwards;
 }
-.scroll-mouse {
-  width: 22px; height: 34px;
-  border: 1.5px solid var(--mid);
-  border-radius: 999px;
-  display: flex; justify-content: center; padding-top: 6px;
-}
-.scroll-wheel {
-  width: 3px; height: 6px;
-  background: var(--mid);
-  border-radius: 999px;
-  animation: wheel 1.5s ease-in-out infinite;
-}
+.scroll-mouse { width: 22px; height: 34px; border: 1.5px solid var(--mid); border-radius: 999px; display: flex; justify-content: center; padding-top: 6px; }
+.scroll-wheel { width: 3px; height: 6px; background: var(--mid); border-radius: 999px; animation: wheel 1.8s ease-in-out infinite; }
 @keyframes wheel { 0%{transform:translateY(0);opacity:1;} 100%{transform:translateY(8px);opacity:0;} }
-.scroll-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); }
 
-/* SERVICES */
-.services {
-  padding: 6rem 2rem;
-  max-width: 480px; margin: 0 auto;
+/* MARQUEE */
+.marquee-wrap {
+  position: relative; z-index: 2; overflow: hidden;
+  background: var(--dark); padding: 14px 0;
 }
+.marquee-track {
+  display: flex; gap: 40px;
+  animation: marquee 22s linear infinite; white-space: nowrap;
+}
+.marquee-track span {
+  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.45); flex-shrink: 0;
+}
+.marquee-track span.dot { color: rgba(255,255,255,0.15); }
+@keyframes marquee { from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
-.section-label {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 3px; text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 0.6rem;
+/* ABOUT STRIP */
+.about {
+  position: relative; z-index: 2;
+  padding: 5rem 2rem; max-width: 480px; margin: 0 auto; text-align: center;
 }
-.section-title {
+.about-body {
+  font-size: 16px; font-weight: 300; color: var(--mid);
+  line-height: 1.9; font-style: italic;
+}
+.about-body strong { color: var(--dark); font-style: normal; font-weight: 600; }
+.about-tagline {
   font-family: 'Syne', sans-serif;
-  font-size: 36px; font-weight: 800;
-  letter-spacing: -1px;
-  color: var(--dark);
-  margin-bottom: 2.5rem;
+  font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+  color: var(--dark); margin-top: 1.5rem; line-height: 1.3;
 }
 
-.pick-header {
-  font-size: 13px; font-weight: 500;
-  color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 1.5px;
-  margin-bottom: 1rem;
+/* SECTION shared */
+.wrap { position: relative; z-index: 2; padding: 4rem 2rem; max-width: 480px; margin: 0 auto; }
+.sec-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--mid); margin-bottom: 0.5rem; }
+.sec-title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: -1.2px; color: var(--dark); margin-bottom: 2rem; line-height: 1; }
+
+/* SERVICES GRID */
+.services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.scard {
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--border); border-radius: 18px;
+  padding: 20px 14px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  transition: all 0.28s ease; backdrop-filter: blur(8px);
+}
+.scard:hover { background: rgba(255,255,255,0.95); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+.scard-icon { font-size: 26px; }
+.scard-name { font-size: 13px; font-weight: 600; color: var(--dark); }
+
+/* PICKUP FROM */
+.pickup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pchip {
+  background: rgba(255,255,255,0.55); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 500; color: var(--dark);
+  transition: all 0.28s ease; backdrop-filter: blur(8px);
+}
+.pchip:hover { background: rgba(255,255,255,0.95); transform: translateX(4px); }
+.pchip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mid); flex-shrink: 0; }
+
+/* PROMISE STRIP */
+.promise {
+  position: relative; z-index: 2;
+  background: var(--dark); padding: 3.5rem 2rem;
   text-align: center;
 }
-
-.grid4 {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px; margin-bottom: 1.5rem;
+.promise-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 7vw, 52px); font-weight: 800;
+  letter-spacing: -1.5px; color: #fff; margin-bottom: 0.8rem; line-height: 1.1;
 }
-.chip {
-  background: var(--off);
-  border: 1px solid var(--light);
-  border-radius: 16px;
-  padding: 20px 14px;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 500;
-  color: var(--dark);
-  transition: all 0.25s ease;
-  cursor: default;
-}
-.chip:hover {
-  background: var(--white);
-  border-color: var(--mid);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-}
-.chip .icon { font-size: 24px; }
-
-.slist { display: flex; flex-direction: column; gap: 8px; }
-.sitem {
-  background: var(--off);
-  border: 1px solid var(--light);
-  border-radius: 16px;
-  padding: 18px 20px;
-  display: flex; align-items: center; gap: 14px;
-  transition: all 0.25s ease;
-}
-.sitem:hover {
-  background: var(--white);
-  border-color: var(--mid);
-  transform: translateX(4px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-}
-.sitem-icon { font-size: 24px; }
-.sitem-text { font-size: 16px; font-weight: 500; color: var(--dark); }
+.promise-title span { -webkit-text-stroke: 1.5px rgba(255,255,255,0.4); color: transparent; }
+.promise-sub { font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.45); font-style: italic; }
 
 /* DIVIDER */
-.section-divider {
-  max-width: 480px; margin: 0 auto;
-  padding: 0 2rem;
-  display: flex; align-items: center; gap: 16px;
-}
-.div-line { flex: 1; height: 1px; background: var(--light); }
-.div-circle {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--mid);
-}
+.div-wrap { position: relative; z-index: 2; max-width: 480px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; gap: 14px; }
+.div-line { flex: 1; height: 1px; background: var(--border); }
+.div-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mid); }
 
 /* CONTACT */
-.contact {
-  padding: 4rem 2rem 6rem;
-  max-width: 480px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 1.2rem;
-}
-
-.net-row {
-  display: flex; align-items: center; gap: 12px;
-  margin-top: 0.4rem;
-}
-.net-line { flex: 1; height: 1px; background: var(--light); }
-.net-tag {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 2px; text-transform: uppercase;
-  color: var(--text-muted); white-space: nowrap;
-}
-
+.contact { position: relative; z-index: 2; padding: 4rem 2rem 6rem; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+.net-row { display: flex; align-items: center; gap: 12px; margin-top: 0.4rem; }
+.net-line { flex: 1; height: 1px; background: var(--border); }
+.net-tag { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--mid); white-space: nowrap; }
 .btn-row { display: flex; gap: 8px; }
 .cbtn {
-  flex: 1; padding: 18px 12px;
-  border-radius: 18px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 600;
-  color: #fff; text-decoration: none;
-  display: flex; flex-direction: column;
-  align-items: center; gap: 6px;
+  flex: 1; padding: 18px 10px; border-radius: 18px;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: #fff;
+  text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 6px;
   transition: all 0.25s ease;
-  border: none; cursor: pointer;
-  position: relative; overflow: hidden;
 }
-.cbtn::after {
-  content: ''; position: absolute; inset: 0;
-  background: rgba(255,255,255,0);
-  transition: background 0.2s;
-}
-.cbtn:hover { transform: translateY(-3px); }
-.cbtn:hover::after { background: rgba(255,255,255,0.1); }
+.cbtn:hover { transform: translateY(-4px); }
 .cbtn:active { transform: scale(0.97); }
-
-.cbtn-wa {
-  background: #00a86b;
-  box-shadow: 0 6px 24px rgba(0,168,107,0.25);
-}
-.cbtn-wa:hover { box-shadow: 0 10px 32px rgba(0,168,107,0.35); }
-
-.cbtn-call {
-  background: var(--dark);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-}
-.cbtn-call:hover { box-shadow: 0 10px 32px rgba(0,0,0,0.25); }
-
-.cbtn-wa-air {
-  background: #d0021b;
-  box-shadow: 0 6px 24px rgba(208,2,27,0.22);
-}
-.cbtn-wa-air:hover { box-shadow: 0 10px 32px rgba(208,2,27,0.35); }
-
-.cbtn-call-air {
-  background: #a8001a;
-  box-shadow: 0 6px 24px rgba(168,0,26,0.22);
-}
-.cbtn-call-air:hover { box-shadow: 0 10px 32px rgba(168,0,26,0.35); }
-
-.cbtn-num {
-  font-size: 9px; font-weight: 400;
-  opacity: 0.7; font-family: monospace; letter-spacing: 0.5px;
-}
+.cbtn-wa { background: #00a86b; box-shadow: 0 6px 24px rgba(0,168,107,0.25); }
+.cbtn-wa:hover { box-shadow: 0 12px 32px rgba(0,168,107,0.38); }
+.cbtn-call { background: var(--dark); box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+.cbtn-call:hover { box-shadow: 0 12px 32px rgba(0,0,0,0.28); }
+.cbtn-wa-air { background: #d0021b; box-shadow: 0 6px 24px rgba(208,2,27,0.22); }
+.cbtn-wa-air:hover { box-shadow: 0 12px 32px rgba(208,2,27,0.35); }
+.cbtn-call-air { background: #900014; box-shadow: 0 6px 24px rgba(144,0,20,0.22); }
+.cbtn-call-air:hover { box-shadow: 0 12px 32px rgba(144,0,20,0.35); }
+.cbtn-num { font-size: 9px; font-weight: 400; opacity: 0.65; font-family: monospace; }
 .cbtn svg { width: 20px; height: 20px; fill: currentColor; }
 
-/* FOOTER */
 footer {
-  text-align: center;
-  padding: 2rem;
-  font-size: 11px;
-  color: var(--mid);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border-top: 1px solid var(--light);
+  position: relative; z-index: 2; text-align: center; padding: 2rem;
+  font-size: 11px; color: var(--mid); letter-spacing: 2px; text-transform: uppercase;
+  border-top: 1px solid var(--border);
 }
 
 /* ANIMATIONS */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<canvas id="cinema"></canvas>
+
 <nav>
   <div class="nav-logo">Phantom <span>Dispatch</span></div>
   <a class="nav-cta" href="#contact">Contact Us</a>
@@ -361,98 +241,122 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-eyebrow">
-    <div class="eyebrow-dot"></div>
-    Now Active · Kisumu
-  </div>
-  <div class="ghost-3d">👻</div>
-  <h1 class="hero-title">
-    Phantom<br><span class="light">Dispatch</span>
-  </h1>
-  <p class="hero-desc">
-    Everything you desire, <strong>exactly where you are.</strong><br>
-    If it's in town, we're on it.
-  </p>
+  <div class="eyebrow"><div class="live-dot"></div>Now Active · Kisumu</div>
+  <div class="ghost-wrap"><span class="ghost-emoji">👻</span></div>
+  <h1 class="hero-title"><span class="outline">Phantom</span><br>Dispatch</h1>
+  <div class="hero-slogan">Everything You Desire, Exactly Where You Are.</div>
+  <p class="hero-sub"><strong>If it's in town, we're on it.</strong><br>We pick it where you buy it.</p>
   <div class="hero-actions">
-    <a class="btn-primary" href="#contact">Get in Touch</a>
-    <a class="btn-ghost" href="#services">Our Services</a>
+    <a class="btn-dark" href="#contact">Get in Touch</a>
+    <a class="btn-outline" href="#services">Our Services</a>
   </div>
-  <div class="hero-scroll">
+  <div class="scroll-hint">
     <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
-    <span class="scroll-label">Scroll</span>
+    <span>Scroll</span>
   </div>
 </section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Phantom Dispatch</span><span class="dot">✦</span>
+    <span>Kisumu Deliveries</span><span class="dot">✦</span>
+    <span>Shopping Pickups</span><span class="dot">✦</span>
+    <span>Food Delivery</span><span class="dot">✦</span>
+    <span>Medicine Pickup</span><span class="dot">✦</span>
+    <span>Gift Delivery</span><span class="dot">✦</span>
+    <span>General Errands</span><span class="dot">✦</span>
+    <span>Grocery Delivery</span><span class="dot">✦</span>
+    <span>Phantom Dispatch</span><span class="dot">✦</span>
+    <span>Kisumu Deliveries</span><span class="dot">✦</span>
+    <span>Shopping Pickups</span><span class="dot">✦</span>
+    <span>Food Delivery</span><span class="dot">✦</span>
+    <span>Medicine Pickup</span><span class="dot">✦</span>
+    <span>Gift Delivery</span><span class="dot">✦</span>
+    <span>General Errands</span><span class="dot">✦</span>
+    <span>Grocery Delivery</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about reveal">
+  <p class="about-body">
+    Whether it's from a <strong>supermarket, shopping mall, local shop, roadside vendor, restaurant, pharmacy,</strong> or any other store in town —
+    Phantom Dispatch gets it to your doorstep <strong>quickly and reliably.</strong>
+  </p>
+  <div class="about-tagline">You shop.<br>We collect. We deliver.</div>
+</div>
 
 <!-- SERVICES -->
-<section class="services" id="services">
-  <div class="reveal">
-    <div class="section-label">What we do</div>
-    <div class="section-title">Our Services</div>
+<div class="wrap" id="services">
+  <div class="sec-eyebrow reveal">What we offer</div>
+  <div class="sec-title reveal">Our Services</div>
+  <div class="services-grid reveal">
+    <div class="scard"><span class="scard-icon">🚲</span><span class="scard-name">Deliveries</span></div>
+    <div class="scard"><span class="scard-icon">🛒</span><span class="scard-name">Shopping Pickups</span></div>
+    <div class="scard"><span class="scard-icon">🏃</span><span class="scard-name">General Errands</span></div>
+    <div class="scard"><span class="scard-icon">📦</span><span class="scard-name">Parcel Delivery</span></div>
+    <div class="scard"><span class="scard-icon">📄</span><span class="scard-name">Document Delivery</span></div>
+    <div class="scard"><span class="scard-icon">🍔</span><span class="scard-name">Food Delivery</span></div>
+    <div class="scard"><span class="scard-icon">🥬</span><span class="scard-name">Grocery Delivery</span></div>
+    <div class="scard"><span class="scard-icon">💊</span><span class="scard-name">Medicine Pickup</span></div>
+    <div class="scard"><span class="scard-icon">🎁</span><span class="scard-name">Gift Delivery</span></div>
+    <div class="scard"><span class="scard-icon">🛍️</span><span class="scard-name">Personal Shopping</span></div>
   </div>
+</div>
 
-  <div class="pick-header reveal">🛍️ We Pick It Where You Buy It</div>
+<!-- PROMISE STRIP -->
+<div class="promise reveal">
+  <div class="promise-title">Fast. <span>Reliable.</span><br>Convenient.</div>
+  <div class="promise-sub">If it's in Kisumu, consider it done.</div>
+</div>
 
-  <div class="grid4 reveal">
-    <div class="chip"><span class="icon">🛒</span>Supermarkets</div>
-    <div class="chip"><span class="icon">🏬</span>Shopping Malls</div>
-    <div class="chip"><span class="icon">🏪</span>Local Shops</div>
-    <div class="chip"><span class="icon">🌿</span>Roadside Vendors</div>
+<!-- PICKUP FROM -->
+<div class="wrap">
+  <div class="sec-eyebrow reveal">We pick up from</div>
+  <div class="sec-title reveal">Any Store in Town</div>
+  <div class="pickup-grid reveal">
+    <div class="pchip"><span class="pchip-dot"></span>Supermarkets</div>
+    <div class="pchip"><span class="pchip-dot"></span>Shopping Malls</div>
+    <div class="pchip"><span class="pchip-dot"></span>Local Shops</div>
+    <div class="pchip"><span class="pchip-dot"></span>Roadside Vendors</div>
+    <div class="pchip"><span class="pchip-dot"></span>Restaurants</div>
+    <div class="pchip"><span class="pchip-dot"></span>Fast Food Outlets</div>
+    <div class="pchip"><span class="pchip-dot"></span>Pharmacies</div>
+    <div class="pchip"><span class="pchip-dot"></span>Hardware Stores</div>
+    <div class="pchip" style="grid-column: span 2; justify-content: center;"><span class="pchip-dot"></span>Any Business Within Town</div>
   </div>
-
-  <div class="slist">
-    <div class="sitem reveal"><span class="sitem-icon">🚲</span><span class="sitem-text">Deliveries</span></div>
-    <div class="sitem reveal"><span class="sitem-icon">🛒</span><span class="sitem-text">Shopping Pickups</span></div>
-    <div class="sitem reveal"><span class="sitem-icon">🏃</span><span class="sitem-text">General Errands</span></div>
-  </div>
-</section>
+</div>
 
 <!-- DIVIDER -->
-<div class="section-divider reveal">
-  <div class="div-line"></div>
-  <div class="div-circle"></div>
-  <div class="div-line"></div>
-</div>
+<div class="div-wrap reveal"><div class="div-line"></div><div class="div-dot"></div><div class="div-line"></div></div>
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
   <div class="reveal">
-    <div class="section-label">Reach us</div>
-    <div class="section-title">Contact</div>
+    <div class="sec-eyebrow">Reach us</div>
+    <div class="sec-title">Contact</div>
   </div>
-
-  <div class="net-row reveal">
-    <div class="net-line"></div>
-    <div class="net-tag">🟢 Safaricom</div>
-    <div class="net-line"></div>
-  </div>
+  <div class="net-row reveal"><div class="net-line"></div><div class="net-tag">🟢 Safaricom</div><div class="net-line"></div></div>
   <div class="btn-row reveal">
     <a class="cbtn cbtn-wa" href="https://wa.me/254718595018?text=Hello%20Kevin">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.979-1.398A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-      WhatsApp
-      <span class="cbtn-num">0718 595 018</span>
+      WhatsApp<span class="cbtn-num">0718 595 018</span>
     </a>
     <a class="cbtn cbtn-call" href="tel:+254718595018">
       <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-      Call
-      <span class="cbtn-num">0718 595 018</span>
+      Call<span class="cbtn-num">0718 595 018</span>
     </a>
   </div>
-
-  <div class="net-row reveal">
-    <div class="net-line"></div>
-    <div class="net-tag">🔴 Airtel</div>
-    <div class="net-line"></div>
-  </div>
+  <div class="net-row reveal"><div class="net-line"></div><div class="net-tag">🔴 Airtel</div><div class="net-line"></div></div>
   <div class="btn-row reveal">
     <a class="cbtn cbtn-wa-air" href="https://wa.me/254754507709?text=Hello%20Kevin">
       <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.979-1.398A9.953 9.953 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-      WhatsApp
-      <span class="cbtn-num">0754 507 709</span>
+      WhatsApp<span class="cbtn-num">0754 507 709</span>
     </a>
     <a class="cbtn cbtn-call-air" href="tel:+254754507709">
       <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-      Call
-      <span class="cbtn-num">0754 507 709</span>
+      Call<span class="cbtn-num">0754 507 709</span>
     </a>
   </div>
 </section>
@@ -460,13 +364,30 @@ footer {
 <footer>👻 Phantom Dispatch · Kisumu · Kenya</footer>
 
 <script>
-const observer = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 80);
-    }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
-</body>
+// CINEMATIC BLOBS
+const canvas = document.getElementById('cinema');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const blobs = [
+  { x:0.15, y:0.15, r:0.48, color:[195,208,238], speed:0.00011, angle:0 },
+  { x:0.85, y:0.25, r:0.42, color:[218,200,240], speed:0.00008, angle:2 },
+  { x:0.5,  y:0.65, r:0.52, color:[208,232,218], speed:0.00010, angle:4 },
+  { x:0.1,  y:0.82, r:0.36, color:[240,222,198], speed:0.00013, angle:1 },
+  { x:0.88, y:0.88, r:0.40, color:[198,222,238], speed:0.00007, angle:3 },
+  { x:0.55, y:0.10, r:0.32, color:[228,215,245], speed:0.00012, angle:5 },
+];
+let t = 0;
+function draw() {
+  ctx.clearRect(0,0,W,H);
+  t++;
+  blobs.forEach(b => {
+    const cx = (b.x + Math.sin(t*b.speed + b.angle)*0.16) * W;
+    const cy = (b.y + Math.cos(t*b.speed*0.7 + b.angle)*0.13) * H;
+    const r  = b.r * Math.min(W,H);
+    const g  = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+    g.addColorStop(0,   `rgba(${b.color},0.55)`);
+    g.addColorStop(0.5, `rgba(${b.color},0.18)`);
+    g.addColorStop(1,   `rgba(${b.color},0)`);
+    ctx.beginPath(); ctx.arc(cx
